@@ -23,6 +23,6 @@ conn.connect();
 
 // Informar cuando el bot esté listo
 conn.on('open', () => {
-  console .log('conectando...')
+  console.log('conectando...')
   console.log('Bot conectado!');
 });
