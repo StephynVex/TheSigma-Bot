@@ -1,6 +1,6 @@
 const { WAConnection } = require('@whiskeysockets/baileys');
 
-const conn = new WAConnection();
+const conn = new WAConnection('./session.json);
 
 conn.on('chat-update', async (update) => {
   if (update.messages) {
