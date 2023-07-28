@@ -9,6 +9,6 @@
   "author": "Álvaro",
   "license": "MIT",
   "dependencies": {
-    "whiskeysockets/baileys": "latest"
+    "whiskeysockets/baileys": "^6.0.0"
   }
 }
