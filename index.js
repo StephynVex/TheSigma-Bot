@@ -1,38 +1,44 @@
-const { WAConnection } = require('@adiwajshing/baileys');
+const fs = require('fs');
+const { WAConnection, MessageType } = require('@whiskeysockets/baileys');
 
-// Crea una nueva instancia de la conexión de WhatsApp
+// Leer el archivo config.json
+const rawdata = fs.readFileSync('config.json');
+const config = JSON.parse(rawdata);
+
+// Obtener la configuración del número de teléfono del administrador
+const adminPhoneNumber = config.adminPhoneNumber;
+
+// Función para verificar si el remitente del mensaje es el administrador
+function isAdminMessage(message) {
+  return message.key.remoteJid === adminPhoneNumber;
+}
+
+// Crear una nueva instancia de la conexión de WhatsApp
 const conn = new WAConnection();
 
-// Función para manejar los mensajes entrantes
-conn.on('message-new', async (message) => {
-  // Si el mensaje es de un chat grupal, ignorarlo
-  if (message.isGroupMsg) return;
+// Configurar la sesión
+conn.logger.level = 'warn'; // Puedes ajustar el nivel de registro según tus necesidades
 
-  // Obtener el número del remitente del mensaje
-  const senderNumber = message.key.remoteJid;
-
-  // Obtener el contenido del mensaje
-  const text = message.message.conversation;
-
-  // Responder al mensaje
-  const reply = `Hola, soy tu bot y recibí tu mensaje: "${text}"`;
-
-  // Enviar la respuesta
-  conn.sendMessage(senderNumber, reply, MessageType.text);
-});
-
-// Iniciar sesión en WhatsApp
+// Iniciar sesión con WhatsApp utilizando las configuraciones
+conn.loadAuthInfo(config.sessionId, config.authToken);
 conn.connect();
 
-// Manejar errores
+// Evento para manejar la conexión
 conn.on('open', () => {
   console.log('Conexión establecida. El bot está listo.');
 });
 
-conn.on('close', (err) => {
-  console.error('La conexión se cerró inesperadamente:', err);
-});
-
-conn.on('ws-close', (err) => {
-  console.error('La conexión WebSocket se cerró inesperadamente:', err);
+// Evento para manejar mensajes entrantes
+conn.on('message-new', async (message) => {
+  if (isAdminMessage(message)) {
+    // Si el remitente es el administrador
+    console.log('Mensaje del administrador recibido:', message.message.conversation);
+    // Aquí puedes agregar lógica para responder a los mensajes del administrador, si lo deseas.
+    const reply = `Hola, soy tu bot y recibí tu mensaje: "${message.message.conversation}"`;
+    conn.sendMessage(adminPhoneNumber, reply, MessageType.text);
+  } else {
+    // Si el remitente no es el administrador
+    console.log('Mensaje de un usuario no autorizado recibido:', message.message.conversation);
+    // Aquí puedes agregar lógica para responder a los mensajes de usuarios no autorizados, si lo deseas.
+  }
 });
