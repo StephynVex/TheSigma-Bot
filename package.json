@@ -2,13 +2,13 @@
   "name": "TheSigma-Bot",
   "version": "1.0.0",
   "description": "Bot de WhatsApp creado con whiskeysockets/baileys",
-  "main": "index.js", // Reemplaza "bot.js" con el nombre de tu archivo principal
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js" // Reemplaza "bot.js" con el nombre de tu archivo principal
+    "start": "node index.js",
   },
   "author": "Álvaro",
   "license": "MIT",
   "dependencies": {
-    "whiskeysockets/baileys": "latest" // Utiliza la última versión disponible de whiskeysockets/baileys
+    "whiskeysockets/baileys": "latest"
   }
 }
